@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <regions>
+        <region>
+            <name>Крым</name>
+            <description>Крым наш!</description>
+        </region>
+    </regions>
+
+    <rocks>
+        <rock>
+            <name>Куш-кая</name>
+            <description>Описание Куш-каи</description>
+            <region>Крым</region>
+        </rock>
+
+        <rock>
+            <name>Мердвен-каясы</name>
+            <description>Описание Мердвен-каясы</description>
+            <region>Крым</region>
+        </rock>
+    </rocks>
+
+    <routes>
+        <route>
+            <name>Классика</name>
+            <description>Классика 2Б</description>
+            <difficult>2Б</difficult>
+            <rock>Куш-кая</rock>
+        </route>
+        <route>
+            <name>Через камин</name>
+            <description>Через камин 3Б</description>
+            <difficult>3Б</difficult>
+            <rock>Куш-кая</rock>
+        </route>
+        <route>
+            <name>Муси-Пуси</name>
+            <description>Муси-Пуси 3А</description>
+            <difficult>3А</difficult>
+            <rock>Мердвен-каясы</rock>
+        </route>
+        <route>
+            <name>Одесский экспресс</name>
+            <description>Одесский экспресс 6А</description>
+            <difficult>6А</difficult>
+            <rock>Мердвен-каясы</rock>
+        </route>
+    </routes>
+</root>
