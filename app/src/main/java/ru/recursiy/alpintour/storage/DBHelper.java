@@ -75,6 +75,12 @@ class DBHelper extends SQLiteOpenHelper {
         for(Iterator<Map<String, String>> iter = provider.getIterator(); iter.hasNext();)
         {
             Map<String, String> element = iter.next();
+            Log.d(Const.LOG_TAG, "__element__");
+            for(Map.Entry<String, String> entry : element.entrySet())
+            {
+                Log.d(Const.LOG_TAG, entry.getKey() + " : " + entry.getValue());
+            }
+
             switch(element.get(ContentProvider.TYPE_TAG))
             {
                 case REGION_TAG:

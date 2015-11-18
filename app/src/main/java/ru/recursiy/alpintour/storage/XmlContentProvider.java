@@ -3,10 +3,12 @@ package ru.recursiy.alpintour.storage;
 
 import android.content.Context;
 
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -58,6 +60,22 @@ public class XmlContentProvider implements ContentProvider
         }
     }
 
+    private String createTagName(ArrayList<String> accum)
+    {
+        //return Joiner.on("_").join(accum);
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (String item : accum)
+        {
+            if (first)
+                first = false;
+            else
+                sb.append("_");
+            sb.append(item);
+        }
+        return sb.toString();
+    }
+
     /**
      * Construct next element and put in into currentElement field
      * @return
@@ -72,6 +90,7 @@ public class XmlContentProvider implements ContentProvider
         HashMap<String, String> element = new HashMap<>(16);
         String tagName = "";
         String typeName = "";
+        ArrayList<String> accum = new ArrayList<>();
         try {
             while(true) {
                 parser.next();
@@ -89,23 +108,31 @@ public class XmlContentProvider implements ContentProvider
                         element.put(TYPE_TAG, typeName);
                     }
                 }
-                if (status == Status.CONSUMING_TAG) {
-                    if (eventType == XmlPullParser.START_TAG) {
+                else if (status == Status.CONSUMING_TAG)
+                {
+                    if (eventType == XmlPullParser.START_TAG)
+                    {
                         tagName = parser.getName();
-                    } else if (eventType == XmlPullParser.TEXT) {
+                        accum.add(tagName);
+                    } else if (eventType == XmlPullParser.TEXT)
+                    {
                         if (BuildConfig.DEBUG && tagName.equals(""))
                         {
                             throw new AssertionError();
                         }
-                        element.put(tagName, parser.getText());
+
+                        element.put(createTagName(accum), parser.getText());
                         tagName = "";
                     }
-                    else if (eventType == XmlPullParser.END_TAG && parser.getName().equals(typeName))
+                    else if (eventType == XmlPullParser.END_TAG)
                     {
-                        //element construction completed
-                        currentElement = element;
-                        status = Status.STARTED;
-                        return true;
+                        if (parser.getName().equals(typeName)) {
+                            //element construction completed
+                            currentElement = element;
+                            status = Status.STARTED;
+                            return true;
+                        }
+                        accum.remove(accum.size()-1);
                     }
                     //todo: inserted tags
                 }

@@ -28,24 +28,40 @@
             <description>Классика 2Б</description>
             <difficult>2Б</difficult>
             <rock>Куш-кая</rock>
+            <geo>
+                <x>0</x>
+                <y>0</y>
+            </geo>
         </route>
         <route>
             <name>Через камин</name>
             <description>Через камин 3Б</description>
             <difficult>3Б</difficult>
             <rock>Куш-кая</rock>
+            <geo>
+                <x>1</x>
+                <y>1</y>
+            </geo>
         </route>
         <route>
             <name>Муси-Пуси</name>
             <description>Муси-Пуси 3А</description>
             <difficult>3А</difficult>
             <rock>Мердвен-каясы</rock>
+            <geo>
+                <x>2</x>
+                <y>2</y>
+            </geo>
         </route>
         <route>
             <name>Одесский экспресс</name>
             <description>Одесский экспресс 6А</description>
             <difficult>6А</difficult>
             <rock>Мердвен-каясы</rock>
+            <geo>
+                <x>3</x>
+                <y>3</y>
+            </geo>
         </route>
     </routes>
 </root>
