@@ -17,6 +17,8 @@ public class Storage {
     public final static String COLUMN_NAME = "name";
     public final static String COLUMN_DESCRIPTION = "description";
     public final static String COLUMN_DIFFICULT = "difficult";
+    public final static String COLUMN_GEO_X = "geo_x";
+    public final static String COLUMN_GEO_Y = "geo_y";
 
     public Storage(Context context)
     {

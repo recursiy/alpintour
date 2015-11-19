@@ -36,6 +36,8 @@ class DBHelper extends SQLiteOpenHelper {
     //route
     final String ROUTE_TAG = "route";
     final String DIFFICULT_TAG = "difficult";
+    final String GEO_X_TAG = "geo_x";
+    final String GEO_Y_TAG = "geo_y";
 
     ContentProvider provider;
 
@@ -68,6 +70,8 @@ class DBHelper extends SQLiteOpenHelper {
                 + Storage.COLUMN_NAME + " text,"
                 + Storage.COLUMN_DESCRIPTION + " text,"
                 + Storage.COLUMN_DIFFICULT + " text,"
+                + Storage.COLUMN_GEO_X + " real,"
+                + Storage.COLUMN_GEO_Y + " real,"
                 + makeForeignKey(TABLE_ROCK) + " integer"
                 + ");");
 
@@ -131,6 +135,8 @@ class DBHelper extends SQLiteOpenHelper {
         cv.put(Storage.COLUMN_NAME, element.get(NAME_TAG));
         cv.put(Storage.COLUMN_DESCRIPTION, element.get(DESCRIPTION_TAG));
         cv.put(Storage.COLUMN_DIFFICULT, element.get(DIFFICULT_TAG));
+        cv.put(Storage.COLUMN_GEO_X, element.get(GEO_X_TAG));
+        cv.put(Storage.COLUMN_GEO_Y, element.get(GEO_Y_TAG));
         db.insert(TABLE_ROUTE, null, cv);
     }
 }
