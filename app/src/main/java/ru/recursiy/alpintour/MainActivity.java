@@ -1,7 +1,6 @@
 package ru.recursiy.alpintour;
 
 
-//todo: move from support.v4
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.app.FragmentActivity;
@@ -28,6 +27,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     Storage storage;
     SimpleCursorAdapter adapter;
     ListView routes;
+    GeoMapAdapter mapAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +67,18 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+        //todo: async load
+        Cursor cursor = storage.getAllRoutes();
+        mapAdapter = new GeoMapAdapter(this, mMap, cursor);
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //LatLng sydney = new LatLng(-34, 151);
+        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
     }
 
     @Override

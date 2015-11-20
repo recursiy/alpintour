@@ -39,7 +39,7 @@
             <difficult>3Б</difficult>
             <rock>Куш-кая</rock>
             <geo>
-                <x>1</x>
+                <x>-1.5</x>
                 <y>1</y>
             </geo>
         </route>
@@ -49,8 +49,8 @@
             <difficult>3А</difficult>
             <rock>Мердвен-каясы</rock>
             <geo>
-                <x>2</x>
-                <y>2</y>
+                <x>2.5</x>
+                <y>-2</y>
             </geo>
         </route>
         <route>
