@@ -4,6 +4,8 @@ package ru.recursiy.alpintour.storage;
 import android.content.Context;
 
 
+import com.google.common.base.Joiner;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -62,18 +64,7 @@ public class XmlContentProvider implements ContentProvider
 
     private String createTagName(ArrayList<String> accum)
     {
-        //return Joiner.on("_").join(accum);
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-        for (String item : accum)
-        {
-            if (first)
-                first = false;
-            else
-                sb.append("_");
-            sb.append(item);
-        }
-        return sb.toString();
+        return Joiner.on("_").join(accum);
     }
 
     /**
