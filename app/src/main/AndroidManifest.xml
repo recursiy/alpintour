@@ -36,6 +36,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--debug database activity-->
+        <!--todo: this activity must appears only in debug-->
+        <activity android:name="ru.recursiy.alpintour.AndroidDatabaseManager"
+            android:theme="@style/Theme.AppCompat.Light">
+        </activity>
     </application>
+
 
 </manifest>

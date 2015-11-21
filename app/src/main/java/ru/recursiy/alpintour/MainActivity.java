@@ -30,6 +30,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -41,7 +42,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         routes = (ListView) findViewById(R.id.routes);
 
         //todo: description -> rock_name
-        String[] from = new String[] { Storage.COLUMN_NAME, Storage.COLUMN_DESCRIPTION, Storage.COLUMN_DIFFICULT };
+        String[] from = new String[] { Storage.COLUMN_NAME, Storage.COLUMN_ROCK_NAME, Storage.COLUMN_DIFFICULT };
         int[] to = new int[] { R.id.name, R.id.rock_name, R.id.difficult };
 
         // создааем адаптер и настраиваем список
@@ -78,7 +79,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 mapAdapter.swapCursor(cursor);
                 break;
         }
-        adapter.swapCursor(cursor);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             switch(id)
             {
                 case ALL_ROUTES_INFO:
-                    return storage.getAllRoutes();
+                    return storage.getRoutesInfo();
                 case ALL_ROUTES_GEO:
                     //todo: rewrite request
                     return storage.getAllRoutes();
