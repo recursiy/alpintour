@@ -8,15 +8,13 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import ru.recursiy.alpintour.storage.Storage;
 
@@ -51,43 +49,35 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         routes.setAdapter(adapter);
 
         // создаем лоадер для чтения данных
-        getSupportLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(MyCursorLoader.ALL_ROUTES_INFO, null, this);
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 
-        //todo: async load
-        Cursor cursor = storage.getAllRoutes();
-        mapAdapter = new GeoMapAdapter(this, mMap, cursor);
-
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(-34, 151);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-
+        mapAdapter = new GeoMapAdapter(this, mMap, null);
+        getSupportLoaderManager().initLoader(MyCursorLoader.ALL_ROUTES_GEO, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new MyCursorLoader(this, storage);
+        return new MyCursorLoader(this, id, storage);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        switch(loader.getId())
+        {
+            case MyCursorLoader.ALL_ROUTES_INFO:
+                adapter.swapCursor(cursor);
+                break;
+            case MyCursorLoader.ALL_ROUTES_GEO:
+                mapAdapter.swapCursor(cursor);
+                break;
+        }
         adapter.swapCursor(cursor);
     }
 
@@ -97,16 +87,37 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     static class MyCursorLoader extends CursorLoader {
 
-        Storage storage;
+        final static int ALL_ROUTES_INFO = 0x01;
+        final static int ALL_ROUTES_GEO = 0x02;
 
-        public MyCursorLoader(Context context, Storage storage) {
+        Storage storage;
+        final int id;
+
+        public MyCursorLoader(Context context, int id, Storage storage) {
             super(context);
             this.storage = storage;
+            this.id = id;
         }
 
         @Override
         public Cursor loadInBackground() {
-            return storage.getAllRoutes();
+            switch(id)
+            {
+                case ALL_ROUTES_INFO:
+                    return storage.getAllRoutes();
+                case ALL_ROUTES_GEO:
+                    //todo: rewrite request
+                    return storage.getAllRoutes();
+            }
+            Log.e(Const.LOG_TAG, "Unknown log");
+            if(BuildConfig.DEBUG)
+                throw new AssertionError("Unknown log");
+            return null;
+        }
+
+        public int getId()
+        {
+            return id;
         }
 
     }

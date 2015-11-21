@@ -5,7 +5,10 @@ import android.database.Cursor;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 import ru.recursiy.alpintour.storage.Storage;
 
@@ -16,6 +19,7 @@ public class GeoMapAdapter {
     Context context;
     GoogleMap map;
     Cursor cursor;
+    ArrayList<Marker> markers;
 
     public GeoMapAdapter(Context ctx, GoogleMap map, Cursor cursor)
     {
@@ -27,11 +31,19 @@ public class GeoMapAdapter {
 
     private void applyCursor()
     {
+        if (markers != null)
+        {
+            for(Marker marker : markers)
+            {
+                marker.remove();
+            }
+            markers = null;
+        }
         if (cursor != null)
         {
-            if (cursor.moveToFirst()) {
-
-                // определяем номера столбцов по имени в выборке
+            markers = new ArrayList<>(cursor.getCount());
+            if (cursor.moveToFirst())
+            {
                 int xIndex = cursor.getColumnIndex(Storage.COLUMN_GEO_X);
                 int yIndex = cursor.getColumnIndex(Storage.COLUMN_GEO_Y);
                 int nameIndex = cursor.getColumnIndex(Storage.COLUMN_NAME);
@@ -41,16 +53,17 @@ public class GeoMapAdapter {
                     double y = cursor.getDouble(yIndex);
                     String name = cursor.getString(nameIndex);
                     LatLng geo = new LatLng(x, y);
-                    map.addMarker(new MarkerOptions().position(geo).title(name));
+                    markers.add(map.addMarker(new MarkerOptions().position(geo).title(name)));
                 } while (cursor.moveToNext());
             }
         }
     }
 
-    //todo: swapCursor, like in SimpleCursorAdapter
-    private void setCursor(Cursor newCursor)
+    public Cursor swapCursor(Cursor newCursor)
     {
+        Cursor oldCursor = cursor;
         cursor = newCursor;
         applyCursor();
+        return oldCursor;
     }
 }
