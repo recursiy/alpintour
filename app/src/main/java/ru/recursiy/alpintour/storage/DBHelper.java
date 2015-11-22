@@ -127,6 +127,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     void insertRock(Map<String, String> element, SQLiteDatabase db)
     {
+        //todo: it's very ugly. Rewrite it
         String query = "insert into " + TABLE_ROCK + " ("
                 + Storage.COLUMN_NAME + ", "
                 + Storage.COLUMN_DESCRIPTION + ", "
@@ -137,13 +138,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 + " WHERE " + TABLE_REGION + "." + Storage.COLUMN_NAME + "='" + element.get(REGION_TAG) + "')"
                 + ")";
         db.execSQL(query);
-        /*ContentValues cv = new ContentValues();
-        cv.put(Storage.COLUMN_NAME, element.get(NAME_TAG));
-        cv.put(Storage.COLUMN_DESCRIPTION, element.get(DESCRIPTION_TAG));
-        cv.put(makeForeignKey(TABLE_REGION),
-                "(SELECT " + Storage.COLUMN_ID + " FROM " + TABLE_REGION
-                        + " WHERE " + TABLE_REGION + "." + Storage.COLUMN_NAME + "=" + element.get(REGION_TAG) + ")");
-        db.insert(TABLE_ROCK, null, cv);*/
     }
 
     void insertRoute(Map<String, String> element, SQLiteDatabase db)
@@ -164,16 +158,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 + " WHERE " + TABLE_ROCK + "." + Storage.COLUMN_NAME + "='" + element.get(ROCK_TAG) + "')"
                 + ")";
         db.execSQL(query);
-        /*ContentValues cv = new ContentValues();
-        cv.put(Storage.COLUMN_NAME, element.get(NAME_TAG));
-        cv.put(Storage.COLUMN_DESCRIPTION, element.get(DESCRIPTION_TAG));
-        cv.put(Storage.COLUMN_DIFFICULT, element.get(DIFFICULT_TAG));
-        cv.put(Storage.COLUMN_GEO_X, element.get(GEO_X_TAG));
-        cv.put(Storage.COLUMN_GEO_Y, element.get(GEO_Y_TAG));
-        cv.put(makeForeignKey(TABLE_ROCK),
-                "(SELECT " + Storage.COLUMN_ID + " FROM " + TABLE_ROCK
-                        + " WHERE " + ROCK_TAG + "." + Storage.COLUMN_NAME + "=" + element.get(ROCK_TAG) + ")");
-        db.insert(TABLE_ROUTE, null, cv);*/
     }
 
     //sqlite debug

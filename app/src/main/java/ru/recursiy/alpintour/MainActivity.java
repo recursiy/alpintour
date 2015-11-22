@@ -2,13 +2,17 @@ package ru.recursiy.alpintour;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -18,7 +22,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import ru.recursiy.alpintour.storage.Storage;
 
-public class MainActivity extends FragmentActivity implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor> {
 
     private GoogleMap mMap;
 
@@ -119,6 +123,23 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         {
             return id;
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item)
+    {
+        if (item.getItemId() == R.id.sqlitedebug)
+        {
+            startActivity(new Intent(this, AndroidDatabaseManager.class));
+            return true;
+        }
+
+        return false;
     }
 }
