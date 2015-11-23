@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Alpin Tour</string>
     <string name="title_activity_maps">Map</string>
+
+    <!--debug-->
+    <string name="lorem_ipsum">Lorem ipsum</string>
 </resources>
