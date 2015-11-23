@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -27,8 +28,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
 
     Storage storage;
-    SimpleCursorAdapter adapter;
-    ListView routes;
+    RouteListAdapter adapter;
+    ExpandableListView routes;
     GeoMapAdapter mapAdapter;
 
     @Override
@@ -43,14 +44,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         storage = new Storage(this);
 
-        routes = (ListView) findViewById(R.id.routes);
+        routes = (ExpandableListView) findViewById(R.id.routes);
 
         //todo: description -> rock_name
         String[] from = new String[] { Storage.COLUMN_NAME, Storage.COLUMN_ROCK_NAME, Storage.COLUMN_DIFFICULT };
         int[] to = new int[] { R.id.name, R.id.rock_name, R.id.difficult };
 
+        String[] childFrom = { Storage.COLUMN_DESCRIPTION };
+        int[] childTo = { R.id.description };
+
         // создааем адаптер и настраиваем список
-        adapter = new SimpleCursorAdapter(this, R.layout.route_list_element, null, from, to, 0);
+        //adapter = new SimpleCursorAdapter(this, R.layout.route_list_element, null, from, to, 0);
+        adapter = new RouteListAdapter(storage, this, null, R.layout.route_list_element, R.layout.route_list_element, from, to,
+                R.layout.route_brief, R.layout.route_brief, childFrom, childTo);
         routes.setAdapter(adapter);
 
         // создаем лоадер для чтения данных
@@ -77,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch(loader.getId())
         {
             case MyCursorLoader.ALL_ROUTES_INFO:
-                adapter.swapCursor(cursor);
+                adapter.setGroupCursor(cursor);
                 break;
             case MyCursorLoader.ALL_ROUTES_GEO:
                 mapAdapter.swapCursor(cursor);

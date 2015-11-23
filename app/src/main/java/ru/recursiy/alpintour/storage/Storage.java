@@ -55,6 +55,15 @@ public class Storage {
 
     public Cursor getAllRoutes()
     {
-        return db.query("route", null, null, null, null, null, null);
+        return db.query(DBHelper.TABLE_ROUTE, null, null, null, null, null, null);
     }
+
+    public Cursor getBriefRouteDescription(int routeId) {
+        String columns[] = {
+                COLUMN_ID,
+                COLUMN_DESCRIPTION
+        };
+        return db.query(DBHelper.TABLE_ROUTE, columns, COLUMN_ID + "=" + routeId, null, null, null, null);
+    }
+
 }
