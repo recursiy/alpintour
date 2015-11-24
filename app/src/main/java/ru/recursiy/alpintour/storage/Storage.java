@@ -33,7 +33,6 @@ public class Storage {
 
     public Storage(Context context)
     {
-        //todo: it is not right place to elements list
         helper = new DBHelper(context, new XmlContentProvider(context, R.xml.test_data, availableElements));
         db = helper.getWritableDatabase();
     }

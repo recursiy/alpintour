@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         routes = (ExpandableListView) findViewById(R.id.routes);
 
-        //todo: description -> rock_name
         String[] from = new String[] { Storage.COLUMN_NAME, Storage.COLUMN_ROCK_NAME, Storage.COLUMN_DIFFICULT };
         int[] to = new int[] { R.id.name, R.id.rock_name, R.id.difficult };
 
