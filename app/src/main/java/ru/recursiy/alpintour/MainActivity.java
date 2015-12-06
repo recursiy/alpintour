@@ -1,65 +1,59 @@
 package ru.recursiy.alpintour;
 
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ExpandableListView;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import ru.recursiy.alpintour.storage.CursorConsumer;
+import ru.recursiy.alpintour.storage.CursorLoaderFactory;
 import ru.recursiy.alpintour.storage.Storage;
+import ru.recursiy.alpintour.storage.StorageCursorLoader;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
     Storage storage;
-    RouteListAdapter adapter;
-    ExpandableListView routes;
+
     GeoMapAdapter mapAdapter;
+
+    RouteListFragment routeList;
+
+    CursorLoaderFactory loaderFactory;
+    LoaderManager loaderManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        storage = new Storage(this);
+        loaderManager = getLoaderManager();
+        loaderFactory = new CursorLoaderFactory(this, storage);
+
         setContentView(R.layout.activity_main);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        storage = new Storage(this);
-
-        routes = (ExpandableListView) findViewById(R.id.routes);
-
-        String[] from = new String[] { Storage.COLUMN_NAME, Storage.COLUMN_ROCK_NAME, Storage.COLUMN_DIFFICULT };
-        int[] to = new int[] { R.id.name, R.id.rock_name, R.id.difficult };
-
-        String[] childFrom = { Storage.COLUMN_DESCRIPTION };
-        int[] childTo = { R.id.description };
-
-        // создааем адаптер и настраиваем список
-        //adapter = new SimpleCursorAdapter(this, R.layout.route_list_element, null, from, to, 0);
-        adapter = new RouteListAdapter(storage, this, null, R.layout.route_list_element, R.layout.route_list_element, from, to,
-                R.layout.route_brief, R.layout.route_brief, childFrom, childTo);
-        routes.setAdapter(adapter);
-
-        // создаем лоадер для чтения данных
-        getSupportLoaderManager().initLoader(MyCursorLoader.ALL_ROUTES_INFO, null, this);
+        routeList = (RouteListFragment) getFragmentManager().findFragmentById(R.id.routes);
+        routeList.init(loaderFactory, loaderManager, storage);
     }
 
 
@@ -69,66 +63,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 
         mapAdapter = new GeoMapAdapter(this, mMap, null);
-        getSupportLoaderManager().initLoader(MyCursorLoader.ALL_ROUTES_GEO, null, this);
+        getLoaderManager().initLoader(StorageCursorLoader.ALL_ROUTES_GEO, null, loaderFactory.createLoader(mapAdapter));
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new MyCursorLoader(this, id, storage);
-    }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        switch(loader.getId())
-        {
-            case MyCursorLoader.ALL_ROUTES_INFO:
-                adapter.setGroupCursor(cursor);
-                break;
-            case MyCursorLoader.ALL_ROUTES_GEO:
-                mapAdapter.swapCursor(cursor);
-                break;
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-    }
-
-    static class MyCursorLoader extends CursorLoader {
-
-        final static int ALL_ROUTES_INFO = 0x01;
-        final static int ALL_ROUTES_GEO = 0x02;
-
-        Storage storage;
-        final int id;
-
-        public MyCursorLoader(Context context, int id, Storage storage) {
-            super(context);
-            this.storage = storage;
-            this.id = id;
-        }
-
-        @Override
-        public Cursor loadInBackground() {
-            switch(id)
-            {
-                case ALL_ROUTES_INFO:
-                    return storage.getRoutesInfo();
-                case ALL_ROUTES_GEO:
-                    //todo: rewrite request
-                    return storage.getAllRoutes();
-            }
-            Log.e(Const.LOG_TAG, "Unknown log");
-            if(BuildConfig.DEBUG)
-                throw new AssertionError("Unknown log");
-            return null;
-        }
-
-        public int getId()
-        {
-            return id;
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -147,4 +85,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return false;
     }
+
 }

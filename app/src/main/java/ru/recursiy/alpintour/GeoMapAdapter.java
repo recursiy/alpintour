@@ -10,12 +10,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+import ru.recursiy.alpintour.storage.CursorConsumer;
 import ru.recursiy.alpintour.storage.Storage;
 
 /**
  * Provides marks on map
  */
-public class GeoMapAdapter {
+public class GeoMapAdapter implements CursorConsumer {
     Context context;
     GoogleMap map;
     Cursor cursor;
@@ -65,5 +66,10 @@ public class GeoMapAdapter {
         cursor = newCursor;
         applyCursor();
         return oldCursor;
+    }
+
+    @Override
+    public void consume(Cursor cursor) {
+        swapCursor(cursor);
     }
 }
